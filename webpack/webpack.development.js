@@ -7,8 +7,7 @@ const development = {
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-  ],
-  devtool: 'inline-source-map',
+  ]
 };
 
 module.exports = development;
