@@ -1,9 +1,6 @@
 'use strict';
 
-const WebpackAssetsManifest = require('webpack-assets-manifest');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CssoWebpackPlugin = require('csso-webpack-plugin').default;
-const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
 const production = {
   plugins: [
@@ -18,12 +15,8 @@ const production = {
         removeStyleLinkTypeAttributes: true,
         keepClosingSlash: true,
       },
-    }),
-    new StatsWriterPlugin({ fields: null, filename: '../stats.json' }),
-    new WebpackAssetsManifest(),
-    new CssoWebpackPlugin(),
-  ],
-  devtool: 'source-map',
+    })
+  ]
 };
 
 module.exports = production;

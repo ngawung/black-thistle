@@ -1,5 +1,5 @@
 // import { qs, qsa, $on, $delegate } from './utils';
 
-import '../stylesheets/style.scss';
+// import '../stylesheets/style.scss';
 
-// console.log('Hello!');
+console.log('Hello!');
