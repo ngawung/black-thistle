@@ -1,7 +1,9 @@
 # Welcome to Black Thistle
 
-Just my random project... 
+Just my random project...
+
 Made by [ngawung](https://github.com/ngawung)
+
 boilerplate from [here](https://github.com/vadimmarkov/webpack-es6-sass-boilerplate)
 
 # \ ゜o゜)ノ
