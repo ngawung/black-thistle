@@ -64,7 +64,7 @@ $(() => {
 	var waiting = false;
 	var currentPos = 0
 	
-	getTyped("#text", dialogue[currentPos], (typed) => {
+	var typed = getTyped("#text", dialogue[currentPos], (typed) => {
 		waiting = true;
 		currentPos++
 	});
@@ -72,14 +72,20 @@ $(() => {
 	
 	$('#skip').click(() => {
 		if (waiting) {
-			waiting = false;
-			
 			if (currentPos<dialogue.length) {
-				getTyped("#text", dialogue[currentPos], (typed) => {
+				waiting = false;
+				typed = getTyped("#text", dialogue[currentPos], (typed) => {
 					waiting = true;
 					currentPos++
 				});
+			} else {
+				$("#text").text("done");
 			}
+		} else {
+			typed.destroy();
+			$("#text").html(dialogue[currentPos]);
+			waiting = true;
+			currentPos++
 		}
 	});
 	
