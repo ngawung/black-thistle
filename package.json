@@ -32,8 +32,10 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "animate.css": "^3.7.2",
     "eruda": "^1.10.3",
     "jquery": "^3.4.1",
-    "normalize.css": "^8.0.1"
+    "particles.js": "^2.0.0",
+    "reset-css": "^5.0.1"
   }
 }

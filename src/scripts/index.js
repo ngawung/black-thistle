@@ -1,12 +1,41 @@
 import * as eruda from 'eruda';
 import * as $ from 'jquery';
+import 'particles.js/particles';
+
+const particlesJS = window.particlesJS;
 
 eruda.init();
 
-console.log('Hello!');
-
+//console.log(particlesJS);
 
 $(() => {
+	
+	$('#reload').click(() => {
+		$("#character").remove();
+		
+		var img = $(document.createElement('img'));
+		img.attr("id", "character");
+		img.attr("src", "/images/melody.png");
+		img.css({
+			bottom: "0px",
+			opacity: 0,
+			left: "-10%"
+		});
+		
+		$("#content").append(img);
+			
+		img.on("load", function() {
+			img.animate({
+				left: (window.innerWidth/2) - (img.width()/2) + "px",
+				opacity: 1
+			}, 400);
+		});
+	});
+	
+	particlesJS.load('particles-js', 'assets/particles.json', function() {
+		console.log('callback - particles.js config loaded');
+	});
+	
 	var dialogue = "im so bored so i make this shit";
 	var splitText = dialogue.split("");
 	
@@ -21,7 +50,7 @@ $(() => {
 		}
 	}, 200);
 	
-	$('button').click(() => {
+	$('#skip').click(() => {
 		if(!isDone) {
 			clearInterval(interval)
 			$("#text").text( dialogue );

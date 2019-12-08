@@ -6,11 +6,12 @@ module.exports = {
   context: paths.src,
   entry: {
     app: `./scripts/index.js`,
-    less: './test.less'
+    less: `./stylesheets/main.less`
   },
   output: {
     filename: `scripts/[name].[hash:8].js`,
     path: paths.build,
+    chunkFilename: '[name].[hash:8].chunk.js'
   },
   module: {
     rules: [
