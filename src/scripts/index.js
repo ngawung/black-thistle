@@ -1,6 +1,7 @@
 import * as eruda from 'eruda';
 import * as $ from 'jquery';
 import 'particles.js/particles';
+import Typed from 'typed.js';
 
 const particlesJS = window.particlesJS;
 
@@ -11,6 +12,7 @@ eruda.init();
 $(() => {
 	
 	$('#reload').click(() => {
+		
 		$("#character").remove();
 		
 		var img = $(document.createElement('img'));
@@ -36,6 +38,7 @@ $(() => {
 		console.log('callback - particles.js config loaded');
 	});
 	
+	/*
 	var dialogue = "im so bored so i make this shit";
 	var splitText = dialogue.split("");
 	
@@ -49,13 +52,38 @@ $(() => {
 			clearInterval(interval)
 		}
 	}, 200);
+	*/
+	
+	var dialogue = [
+		"im so <span class='red'>bored</span> so i make this shit",
+		"here some random notes",
+		"im tired, pls just work already",
+		"i miss my friend"
+	];
+	
+	var waiting = false;
+	var currentPos = 0
+	
+	getTyped("#text", dialogue[currentPos], (typed) => {
+		waiting = true;
+		currentPos++
+	});
+	
 	
 	$('#skip').click(() => {
-		if(!isDone) {
-			clearInterval(interval)
-			$("#text").text( dialogue );
+		if (waiting) {
+			waiting = false;
+			
+			if (currentPos<dialogue.length) {
+				getTyped("#text", dialogue[currentPos], (typed) => {
+					waiting = true;
+					currentPos++
+				});
+			}
 		}
 	});
+	
+	
 	
 	/*
 	for (var i=0; i<splitText.length; i++) {
@@ -68,6 +96,22 @@ $(() => {
 	*/
     
 });
+
+function getTyped(el, text, onComplete) {
+	var options = {
+		strings: [text],
+		typeSpeed: 40,
+		showCursor: false,
+		fadeOut: true,
+		fadeOutDelay: 0,
+		onComplete: (typed) => {
+			onComplete(typed);
+		}
+	};
+	
+	return new Typed(el, options);
+}
+
 
 function sleep (ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
