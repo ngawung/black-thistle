@@ -1,58 +1,188 @@
-import * as eruda from 'eruda';
-import * as $ from 'jquery';
-import 'particles.js/particles';
-import Typed from 'typed.js';
+const eruda = require("eruda");
+const $ = require("jquery");
+const particlesJS = require("particles.js/particles");
+const Typed = require("typed.js");
 
-const particlesJS = window.particlesJS;
+const background = require("../json/background");
+const character = require("../json/character");
+const script = require("../json/script");
 
 eruda.init();
 
-//console.log(particlesJS);
+$(async () => {
+	
+	await runScript(script.start);
+	
+});
+
+async function runScript(data) {
+	var bg = data.background;
+	var actions = data.actions;
+	
+	$("#background").attr("class", "house");
+	
+	for (var i=0; i<actions.length; i++) {
+		var type = actions[i].type;
+		
+		if (type == "dialogue") {
+			var typed = await getTyped("#text", actions[i].message)
+		} else if (type == "character") {
+			var image = await getCharacter(actions[i].id, actions[i].position, actions[i].animation)
+			await delay(500);
+		}
+		
+	}
+	
+	await removeCharacter();
+	await delay(500);
+}
+
+function getTyped(el, text) {
+	return new Promise(function(resolve) {
+		var waiting = false;
+		
+		var options = {
+			strings: [text],
+			typeSpeed: 40,
+			showCursor: false,
+			fadeOut: true,
+			fadeOutDelay: 0,
+			onComplete: (typed) => {
+				waiting = true;
+			}
+		};
+		
+		var typed = new Typed(el, options);
+		
+		$('#dialogue-box').show()
+		
+		$('#skip').click(() => {
+			if (waiting) {
+				typed.destroy();
+				$('#dialogue-box').hide();
+				$('#skip').off()
+				
+				resolve();
+			} else {
+				typed.destroy();
+				$('#text').html(text);
+				waiting = true;
+			}
+		});
+	});
+}
+
+function getCharacter(id, position, animation) {
+	return new Promise(function(resolve) {
+		if ($("#" + id).length) {
+			var img = $("#" + id);
+			
+			var newPos = ""
+			if (animation == "center") {
+				newPos = (window.innerWidth/2) - (img.width()/2) + "px"
+			} else if (animation == "left") {
+				newPos = ((window.innerWidth/2)/2) - (img.width()/2) + "px"
+			} else if (animation == "right") {
+				newPos = window.innerWidth - ((window.innerWidth/2)/2) - (img.width()/2) + "px"
+			} else if (animation == "remove") {
+				resolve(removeCharacter(id))
+			}
+		
+			img.animate({
+				left: newPos,
+			}, {
+				complete: () => {
+					img.off();
+					resolve();
+				},
+				duration: 500,
+				//easing: "linear"
+			});
+			
+		} else {
+			var img = $(document.createElement('img'));
+			img.addClass("character");
+			img.attr("id", id);
+			img.attr("src", character[id].src);
+			img.css({
+				bottom: "-100%",
+				opacity: 0
+			});
+			
+			$("#content").append(img);
+			
+			img.on("load", function() {
+				img.css("bottom", "0px");
+				
+				if (animation == "left") {
+					img.css("left", -img.width()/3);
+				} else {
+					img.css("left", window.innerWidth + img.width()/3);
+				}
+				
+				var newPos = ""
+				if (animation == "center") {
+					newPos = (window.innerWidth/2) - (img.width()/2) + "px"
+				} else if (animation == "left") {
+					newPos = ((window.innerWidth/2)/2) - (img.width()/2) + "px"
+				} else if (animation == "right") {
+					newPos = window.innerWidth - ((window.innerWidth/2)/2) - (img.width()/2) + "px"
+				}
+			
+				img.animate({
+					left: newPos,
+					opacity: 1,
+				}, {
+					complete: () => {
+						img.off();
+						resolve();
+					},
+					duration: 500,
+					//easing: "linear"
+				});
+				
+			});
+			
+		}
+		
+	});
+}
+
+function removeCharacter(id = "") {
+	return new Promise(function(resolve) {
+		if (id == "") id = ".character";
+		else id = "#" + id;
+		$(id).animate({
+			opacity: 0,
+		}, {
+			complete: function() {
+				this.remove();
+				resolve();
+			},
+			duration: 500,
+			//easing: "linear"
+		});
+	});
+}
+
+function delay(ms) {
+   return new Promise(function(resolve) { 
+       setTimeout(resolve, ms)
+   });
+}
+
+/*
 
 $(() => {
 	
 	$('#reload').click(() => {
 		
-		$("#character").remove();
 		
-		var img = $(document.createElement('img'));
-		img.attr("id", "character");
-		img.attr("src", "/images/melody.png");
-		img.css({
-			bottom: "0px",
-			opacity: 0,
-			left: "-10%"
-		});
-		
-		$("#content").append(img);
-			
-		img.on("load", function() {
-			img.animate({
-				left: (window.innerWidth/2) - (img.width()/2) + "px",
-				opacity: 1
-			}, 400);
-		});
 	});
 	
 	particlesJS.load('particles-js', 'assets/particles.json', function() {
 		console.log('callback - particles.js config loaded');
 	});
-	
-	/*
-	var dialogue = "im so bored so i make this shit";
-	var splitText = dialogue.split("");
-	
-	var i = 0
-	var isDone = false
-	var interval = setInterval(() => {
-		$("#text").text( $("#text").text() + splitText[i] )
-		i++
-		if (i>splitText.length - 1) {
-			isDone = true;
-			clearInterval(interval)
-		}
-	}, 200);
-	*/
 	
 	var dialogue = [
 		"im so <span class='red'>bored</span> so i make this shit",
@@ -89,18 +219,10 @@ $(() => {
 		}
 	});
 	
+	$("#shake").click(() => {
+		$("#character").toggleClass("shake");
+	});
 	
-	
-	/*
-	for (var i=0; i<splitText.length; i++) {
-		((i) => { // to make sure setTimeout callback can access i variable
-			setTimeout(() => {
-				$("#text").text( $("#text").text() + splitText[i] )
-			}, 100 * i);
-		})(i);
-	}
-	*/
-    
 });
 
 function getTyped(el, text, onComplete) {
@@ -117,8 +239,4 @@ function getTyped(el, text, onComplete) {
 	
 	return new Typed(el, options);
 }
-
-
-function sleep (ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+*/

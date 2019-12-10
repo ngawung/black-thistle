@@ -1,0 +1,10 @@
+{
+  "melody": {
+    "displayName": "Melody",
+    "src": "/images/melody.png"
+  },
+  "mist": {
+    "displayName": "Mist",
+    "src": "/images/mist.jpg"
+  }
+}
