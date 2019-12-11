@@ -1,42 +1,49 @@
 {
-	"start": {
-		"background": "house",
-		"actions": [
-			{
-				"type": "character",
-				"id": "melody",
-				"animation": "right"
-			},
-			{
-				"type": "dialogue",
-				"name": "Melody",
-				"message": "Hello there, my name is Melody"
-			},
-			{
-				"type": "dialogue",
-				"name": "Melody",
-				"message": "i running bathhouse shop in Kardia"
-			},
-			{
-				"type": "dialogue",
-				"name": "Melody",
-				"message": "i hope we can be good friend"
-			},
-			{
-				"type": "character",
-				"id": "melody",
-				"animation": "remove"
-			},
-			{
-				"type": "character",
-				"id": "mist",
-				"animation": "left"
-			},
-			{
-				"type": "dialogue",
-				"name": "Mist",
-				"message": "Hi there...my name is Mist.."
-			}
-		]
-	}
+	"start": [
+		{
+			"type": "background",
+			"model": "image",
+			"id": "house"
+		},
+		{
+			"type": "character",
+			"id": "melody",
+			"animation": "right"
+		},
+		{
+			"type": "dialogue",
+			"name": "Melody",
+			"message": "Hello there, my name is Melody"
+		},
+		{
+			"type": "dialogue",
+			"name": "Melody",
+			"message": "i running bathhouse shop in Kardia"
+		},
+		{
+			"type": "dialogue",
+			"name": "Melody",
+			"message": "i hope we can be good friend"
+		},
+		{
+			"type": "character",
+			"id": "melody",
+			"animation": "remove"
+		},
+		{
+			"type": "background",
+			"model": "image",
+			"id": "farm"
+		},
+		{
+			"type": "character",
+			"id": "mist",
+			"animation": "left"
+		},
+		{
+			"type": "dialogue",
+			"name": "Mist",
+			"message": "Hi there...my name is Mist.."
+		}
+	]
 }

@@ -1,5 +1,8 @@
 {
 	"house": {
 		"src": "/images/house.png"
+	},
+	"farm": {
+		"src": "/images/farm.jpg"
 	}
 }

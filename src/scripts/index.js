@@ -16,19 +16,16 @@ $(async () => {
 });
 
 async function runScript(data) {
-	var bg = data.background;
-	var actions = data.actions;
-	
-	$("#background").attr("class", "house");
-	
-	for (var i=0; i<actions.length; i++) {
-		var type = actions[i].type;
+	for (var i=0; i<data.length; i++) {
+		var type = data[i].type;
 		
 		if (type == "dialogue") {
-			var typed = await getTyped("#text", actions[i].message)
+			var typed = await getTyped(data[i].message)
 		} else if (type == "character") {
-			var image = await getCharacter(actions[i].id, actions[i].position, actions[i].animation)
+			var image = await getCharacter(data[i].id, data[i].position, data[i].animation)
 			await delay(500);
+		} else if (type == "background") {
+			var bg = await getBackground(data[i].id, data[i].model);
 		}
 		
 	}
@@ -37,7 +34,7 @@ async function runScript(data) {
 	await delay(500);
 }
 
-function getTyped(el, text) {
+function getTyped(text) {
 	return new Promise(function(resolve) {
 		var waiting = false;
 		
@@ -52,20 +49,21 @@ function getTyped(el, text) {
 			}
 		};
 		
+		var el = "#dialogue-text"
 		var typed = new Typed(el, options);
 		
-		$('#dialogue-box').show()
+		$('#dialogue').show()
 		
 		$('#skip').click(() => {
 			if (waiting) {
 				typed.destroy();
-				$('#dialogue-box').hide();
+				$('#dialogue').hide();
 				$('#skip').off()
 				
 				resolve();
 			} else {
 				typed.destroy();
-				$('#text').html(text);
+				$(el).html(text);
 				waiting = true;
 			}
 		});
@@ -109,7 +107,7 @@ function getCharacter(id, position, animation) {
 				opacity: 0
 			});
 			
-			$("#content").append(img);
+			$("#character").append(img);
 			
 			img.on("load", function() {
 				img.css("bottom", "0px");
@@ -165,6 +163,19 @@ function removeCharacter(id = "") {
 	});
 }
 
+function getBackground(id, model) {
+	return new Promise(function(resolve) {
+		if (model == "image") {
+			
+			$("#background-image").attr("class", id);
+			resolve();
+			
+		} else if (model == "particle") {
+			
+		}
+	});
+}
+
 function delay(ms) {
    return new Promise(function(resolve) { 
        setTimeout(resolve, ms)
@@ -198,7 +209,7 @@ $(() => {
 		waiting = true;
 		currentPos++
 	});
-	
+	 
 	
 	$('#skip').click(() => {
 		if (waiting) {
