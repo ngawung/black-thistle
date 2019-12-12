@@ -30,7 +30,12 @@ async function runScript(data) {
 		
 	}
 	
-	await resetAll();
+	
+	await Promise.all([
+		removeCharacter(),
+		removeBackground()
+	]);
+	
 	await delay(500);
 }
 
@@ -110,7 +115,6 @@ function getCharacter(id, position, animation) {
 			$("#character").append(img);
 			
 			img.on("load", function() {
-				console.log("loaded");
 				img.css("bottom", "0px");
 				
 				if (animation == "left") {
@@ -130,7 +134,6 @@ function getCharacter(id, position, animation) {
 					resolve(removeCharacter(id))
 				}
 			
-				console.log("animate");
 				img.animate({
 					left: newPos,
 					opacity: 1,
@@ -167,6 +170,14 @@ function removeCharacter(id = "") {
 	});
 }
 
+function removeBackground() {
+	return new Promise(function(resolve) {
+		$("#background-image").fadeTo(500, 0, () => {
+			resolve();
+		});
+	});
+}
+
 function getBackground(id, model) {
 	return new Promise(function(resolve) {
 		if (model == "image") {
@@ -175,7 +186,6 @@ function getBackground(id, model) {
 			if (container.css("opacity") == 0) {
 				container.attr("class", id);
 				container.fadeTo(500, 1, () => {
-					console.log("done");
 					resolve();
 				});
 			} else {
@@ -194,9 +204,10 @@ function getBackground(id, model) {
 }
 
 function resetAll() {
-	return new Promise(function(resolve) {
-		removeCharacter
-	});
+	return Promise.all([
+		removeCharacter,
+		removeBackground,
+	]);
 }
 
 function delay(ms) {
