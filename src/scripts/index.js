@@ -30,7 +30,7 @@ async function runScript(data) {
 		
 	}
 	
-	await removeCharacter();
+	await resetAll();
 	await delay(500);
 }
 
@@ -85,7 +85,7 @@ function getCharacter(id, position, animation) {
 			} else if (animation == "remove") {
 				resolve(removeCharacter(id))
 			}
-		
+			
 			img.animate({
 				left: newPos,
 			}, {
@@ -110,6 +110,7 @@ function getCharacter(id, position, animation) {
 			$("#character").append(img);
 			
 			img.on("load", function() {
+				console.log("loaded");
 				img.css("bottom", "0px");
 				
 				if (animation == "left") {
@@ -125,8 +126,11 @@ function getCharacter(id, position, animation) {
 					newPos = ((window.innerWidth/2)/2) - (img.width()/2) + "px"
 				} else if (animation == "right") {
 					newPos = window.innerWidth - ((window.innerWidth/2)/2) - (img.width()/2) + "px"
+				} else if (animation == "remove") {
+					resolve(removeCharacter(id))
 				}
 			
+				console.log("animate");
 				img.animate({
 					left: newPos,
 					opacity: 1,
@@ -166,13 +170,32 @@ function removeCharacter(id = "") {
 function getBackground(id, model) {
 	return new Promise(function(resolve) {
 		if (model == "image") {
+			var container = $("#background-image")
 			
-			$("#background-image").attr("class", id);
-			resolve();
+			if (container.css("opacity") == 0) {
+				container.attr("class", id);
+				container.fadeTo(500, 1, () => {
+					console.log("done");
+					resolve();
+				});
+			} else {
+				container.fadeTo(500, 0, () => {
+					container.attr("class", id);
+					container.fadeTo(500, 1, () => {
+						resolve();
+					});
+				});
+			}
 			
 		} else if (model == "particle") {
 			
 		}
+	});
+}
+
+function resetAll() {
+	return new Promise(function(resolve) {
+		removeCharacter
 	});
 }
 
